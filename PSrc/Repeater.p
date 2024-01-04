@@ -1,7 +1,9 @@
-event eSignalRetransmit;
+type tConnection = (machine1: Repeater, machine2: Repeater);
+
+event eSignalRetransmit: seq[tConnection];
 event eSignalIncrement;
 event eSignalConditionalIncrement;
-event eSignalFalseRetransmit: (num: int);
+event eSignalFalseRetransmit: seq[tConnection];
 event eSignalExternalRetransmit;
 event eSignalSecondaryRetransmit;
 event eSignalTertiaryRetransmit;
@@ -16,51 +18,66 @@ machine Repeater
     {
       internalValue = input.val;
       internalName = input.name;
+
+      goto Connected;
     }
-    on eConnect goto Connected;
   }
 
   state Connected
   {
-    on eSignalRetransmit goto SimpleRetransmit;
+    on eSignalRetransmit do (tConns: seq[tConnection])
+    {
+      SimpleRetransmit(tConns);
+    }
   }
 
-  state SetValue
+  fun SetValue(tConns: seq[tConnection])
   {
     
   }
 
-  state SimpleRetransmit
+  fun SimpleRetransmit(tConns: seq[tConnection])
+  {
+    var tConn: tConnection;
+  
+    foreach(tConn in tConns)
+    {
+      if(tConn.machine1 == this)
+      {
+        announce eSpec_Signal, tConn.machine2;
+        send tConn.machine2, eSignalRetransmit, tConns;
+      }
+    }
+    
+    goto Connected;
+  }
+
+  fun SimpleIncrement(tConns: seq[tConnection])
   {
 
   }
 
-  state SimpleIncrement
-  {
-
-  }
-
-  state ConditionalIncrement
+  fun ConditionalIncrement(tConns: seq[tConnection])
   {
     
   }
 
-  state FalseRetransmit
+  fun FalseRetransmit(tConns: seq[tConnection])
   {
 
   }
 
-  state EternalRetransmit
+  fun EternalRetransmit(tConns: seq[tConnection])
   {
 
   }
 
-  state SecondaryRetransmit
+  fun SecondaryRetransmit(tConns: seq[tConnection])
   {
     
   }
 
-  state TertiaryRetransmit
+  fun TertiaryRetransmit(tConns: seq[tConnection])
   {
     
   }

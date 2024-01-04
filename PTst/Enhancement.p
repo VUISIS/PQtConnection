@@ -1,11 +1,15 @@
-fun enhancement_test_0()
-{
-
-}
-
 fun enhancement_test_1()
 {
+    var rA: Repeater;
+    var conn: tConnection;
+    var conns: seq[tConnection];
 
+    rA = new Repeater((val = 0, name = "a"));
+
+    conn = (machine1 = rA, machine2 = rA);
+    conns += (0, conn);
+
+    send rA, eSignalRetransmit, conns;
 } 
 
 fun enhancement_test_2() 

@@ -1,1 +1,1 @@
-module QObject = { Repeater, Connection };
+module QObject = { Repeater };

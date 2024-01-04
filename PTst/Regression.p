@@ -2,12 +2,16 @@ fun regression_test_4()
 {
     var rA: Repeater;
     var rB: Repeater;
-    var conn: Connection;
+    var conn: tConnection;
+    var conns: seq[tConnection];
 
     rA = new Repeater((val = 0, name = "a"));
-    rB = new Repeater((val = 0, name = "b"));
+    rB = new Repeater((val = 1, name = "b"));
 
-    conn = new Connection((objA = rA, signal = eSignalRetransmit, objB = rB));
+    conn = (machine1 = rA, machine2 = rB);
+    conns += (0, conn);
+
+    send rB, eSignalRetransmit, conns;
 } 
 
 fun regression_test_5() 
